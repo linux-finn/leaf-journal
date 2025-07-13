@@ -1,0 +1,196 @@
+#!/bin/bash
+# leaf - Simple daily journaling tool
+
+# Configuration
+LEAF_DIR="$HOME/Nextcloud/Notes/Leaf"
+EDITOR="${EDITOR:-nano}"
+
+# Main function to handle commands
+main() {
+    case "$1" in
+        "")
+            open_today
+            ;;
+        "yesterday")
+            open_yesterday
+            ;;
+        "find")
+            search_entries "$2"
+            ;;
+        "list")
+            list_entries
+            ;;
+        "help")
+            show_help
+            ;;
+        "setup")
+            setup_leaf
+            ;;
+        *)
+            echo "❌ Unknown command: $1"
+            echo "💡 Try: leaf help"
+            ;;
+    esac
+}
+
+# Open today's journal entry
+open_today() {
+    local today=$(date +%Y-%m-%d)
+    open_journal_entry "$today"
+}
+
+# Open yesterday's journal entry
+open_yesterday() {
+    local yesterday=$(date -d yesterday +%Y-%m-%d)
+    open_journal_entry "$yesterday"
+}
+
+# Open specific journal entry
+open_journal_entry() {
+    local date="$1"
+    local file="$LEAF_DIR/$date.txt"
+    local readable_date=$(date -d "$date" "+%A, %B %d, %Y" 2>/dev/null || echo "$date")
+    
+    echo "🍃 Opening journal for $readable_date"
+    
+    # Check if directory exists
+    if [[ ! -d "$LEAF_DIR" ]]; then
+        echo "❌ Leaf not set up. Run: leaf setup"
+        return 1
+    fi
+    
+    # Create file if it doesn't exist
+    if [[ ! -f "$file" ]]; then
+        echo "📝 Creating new journal entry..."
+        create_template "$file" "$readable_date"
+    fi
+    
+    # Open in editor
+    $EDITOR "$file"
+    echo "✅ Journal entry saved!"
+}
+
+# Search journal entries
+search_entries() {
+    local term="$1"
+    
+    if [[ -z "$term" ]]; then
+        echo "❌ Please provide a search term"
+        echo "💡 Usage: leaf find \"keyword\""
+        return 1
+    fi
+    
+    echo "🔍 Searching journal entries for: $term"
+    
+    if [[ ! -d "$LEAF_DIR" ]]; then
+        echo "❌ Leaf not set up. Run: leaf setup"
+        return 1
+    fi
+    
+    # Search and show results with context
+    grep -r -i -n "$term" "$LEAF_DIR" --include="*.txt" | head -10 | while IFS=: read file line content; do
+        local date=$(basename "$file" .txt)
+        local readable_date=$(date -d "$date" "+%B %d, %Y" 2>/dev/null || echo "$date")
+        echo "  🍃 $readable_date (line $line): $content"
+    done
+    
+    # Check if no results
+    if ! grep -r -i -q "$term" "$LEAF_DIR" --include="*.txt" 2>/dev/null; then
+        echo "  No entries found containing '$term'"
+    fi
+}
+
+# List recent journal entries
+list_entries() {
+    echo "📖 Recent journal entries:"
+    
+    if [[ ! -d "$LEAF_DIR" ]]; then
+        echo "❌ Leaf not set up. Run: leaf setup"
+        return 1
+    fi
+    
+    # List files, newest first
+    ls -t "$LEAF_DIR"/*.txt 2>/dev/null | head -10 | while read file; do
+        local date=$(basename "$file" .txt)
+        local readable_date=$(date -d "$date" "+%A, %B %d, %Y" 2>/dev/null || echo "$date")
+        echo "  🍃 $readable_date"
+    done
+    
+    # Check if no files found
+    if [[ ! -f "$LEAF_DIR"/*.txt ]] 2>/dev/null; then
+        echo "  No journal entries found yet."
+        echo "  💡 Try: leaf"
+    fi
+}
+
+# Create daily template
+create_template() {
+    local file="$1"
+    local readable_date="$2"
+    
+    cat > "$file" << EOF
+🍃 $readable_date
+
+🌤️ Weather: 
+😊 Mood: 
+⚡ Energy: 
+
+🌅 Morning intentions:
+
+
+🎯 Day's highlights:
+
+
+🤔 Reflections:
+
+
+🙏 Grateful for:
+
+
+🌱 Tomorrow's focus:
+
+EOF
+}
+
+# Help function
+show_help() {
+    cat << EOF
+🍃 Leaf - Simple Daily Journaling
+
+Usage:
+  leaf              Open today's journal entry
+  leaf yesterday    Open yesterday's entry
+  leaf find "term"  Search all entries
+  leaf list         Show recent entries
+  leaf help         Show this help
+  leaf setup        Initial setup
+
+Examples:
+  leaf              # Start today's journal
+  leaf yesterday    # Edit yesterday's entry
+  leaf find "coffee"# Find entries mentioning coffee
+  leaf list         # See recent entries
+
+Journal files stored in: $LEAF_DIR
+EOF
+}
+
+# Setup function
+setup_leaf() {
+    echo "🌱 Setting up Leaf..."
+    echo "📁 Journal directory: $LEAF_DIR"
+    
+    # Create the directory
+    mkdir -p "$LEAF_DIR"
+    
+    if [[ -d "$LEAF_DIR" ]]; then
+        echo "✅ Leaf directory created successfully!"
+        echo "🎉 Setup complete!"
+        echo "💡 Try: leaf"
+    else
+        echo "❌ Failed to create directory"
+    fi
+}
+
+# Run main function with all arguments
+main "$@"
