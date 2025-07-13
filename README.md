@@ -1,48 +1,127 @@
 ```markdown
 # Leaf 🍃 - Simple Daily Journaling CLI
 
-A simple command-line tool for daily journaling that syncs with Nextcloud.
+A beautiful command-line tool for daily journaling that syncs seamlessly with Nextcloud.
 
-## Features
+## ✨ Features
 
-- 🍃 Beautiful daily journal templates
-- 🔍 Search through all entries
-- 📱 Mobile editing via Nextcloud sync
-- 📝 Plain text files you own forever
+- 🍃 **Daily journal templates** with emoji sections for mood, weather, and reflections
+- 🔍 **Powerful search** through all your journal entries
+- 📱 **Mobile editing** via Nextcloud sync (QuillPad, Nextcloud Notes)
+- 📝 **Plain text files** - you own your data forever, no vendor lock-in
+- 🔄 **Cross-device sync** - write anywhere, access everywhere
+- ⚡ **Lightning fast** - CLI speed with beautiful templates
 
-## Installation
+## 🚀 Quick Start
 
 ```bash
-# Make the script executable
+# Download and install
+git clone https://github.com/linux-finn/leaf-journal.git
+cd leaf-journal
 chmod +x leaf
+sudo cp leaf /usr/local/bin/
 
-# Copy to system path
-sudo cp leaf /usr/local/bin/leaf
+# Setup and start journaling
+leaf setup
+leaf
 ```
 
-## Usage
+## 📋 Commands
+
+| Command | Description |
+|---------|-------------|
+| `leaf` | Open today's journal entry |
+| `leaf yesterday` | Open yesterday's entry |
+| `leaf find "keyword"` | Search all journal entries |
+| `leaf list` | Show recent entries |
+| `leaf setup` | Initial setup |
+| `leaf help` | Show help menu |
+
+## 📱 Mobile Access
+
+Leaf works beautifully with mobile apps:
+
+- **QuillPad** (Android) - Full Nextcloud integration
+- **Nextcloud Notes** (iOS/Android) - Official app
+- **Any text editor** that supports Nextcloud
+
+Your journal entries sync automatically across all devices!
+
+## 🎯 Daily Template
+
+Each journal entry includes structured sections:
+
+```
+🍃 Saturday, July 13, 2025
+
+🌤️ Weather: 
+😊 Mood: 
+⚡ Energy: 
+
+🌅 Morning intentions:
+
+
+🎯 Day's highlights:
+
+
+🤔 Reflections:
+
+
+🙏 Grateful for:
+
+
+🌱 Tomorrow's focus:
+
+```
+
+## 🛠️ Setup Requirements
+
+- **Bash shell** (Linux, macOS, WSL)
+- **Nextcloud account** (for sync - optional but recommended)
+- **Text editor** (nano, vim, kate, etc.)
+
+## 📂 File Organization
+
+```
+~/Nextcloud/Notes/Leaf/
+├── 2025-07-13.txt    # Today's entry
+├── 2025-07-12.txt    # Yesterday's entry
+├── 2025-07-11.txt    # Previous entries
+└── ...               # Years of journal history
+```
+
+## 🔍 Search Examples
 
 ```bash
-leaf              # Open today's journal
-leaf yesterday    # Open yesterday's entry
-leaf find "term"  # Search all entries
-leaf list         # Show recent entries
-leaf setup        # Initial setup
-leaf help         # Show help
+# Find entries about work
+leaf find "meeting"
+
+# Look for mood patterns  
+leaf find "mood: good"
+
+# Search for gratitude entries
+leaf find "grateful"
 ```
 
-## Setup
+## 🤝 Contributing
 
-1. Run `leaf setup` to create the journal directory
-2. Start journaling with `leaf`
-3. Journal files are saved to `~/Nextcloud/Notes/Leaf/`
+Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-## Mobile Access
+## 📄 License
 
-Use QuillPad or Nextcloud Notes app to edit entries on your phone.
-Files sync automatically via Nextcloud.
+MIT License - see [LICENSE](LICENSE) file for details.
 
-## License
+## 🌟 Why Leaf?
 
-MIT License
+> "Each day is a new leaf in the story of your life"
+
+Leaf helps you build a sustainable journaling habit with:
+- **Simplicity** - One command to start writing
+- **Consistency** - Beautiful templates every day  
+- **Longevity** - Plain text files that last forever
+- **Accessibility** - Works on any device, any platform
+
+---
+
+**Start your journaling journey today with `leaf`** 🍃
 ```
